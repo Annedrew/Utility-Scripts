@@ -31,14 +31,15 @@ class DataExtract:
 
 
     # Save csv file
-    def save_csv(self, product_lines):
-        if os.path.exists("output.csv"):
-            existing_data = pd.read_csv("output.csv")
+    def save_csv(self, product_lines, folder_path):
+        output_file = f"{folder_path}/output.csv"
+        if os.path.exists(output_file):
+            existing_data = pd.read_csv(output_file)
             combined_data = pd.concat([existing_data, product_lines], ignore_index=True)
         else:
             combined_data = product_lines
 
-        combined_data.to_csv("output.csv", index=False)
+        combined_data.to_csv(output_file, index=False)
         print("Extracted data saved.")
         print("---------------------")
 
@@ -53,7 +54,7 @@ class DataExtract:
         df_output['i'] = df_output['i'].map(mapping_dict)
         df_output['j'] = df_output['j'].map(mapping_dict)
 
-        output_file_path = 'output_countries.csv'
+        output_file_path = f'{os.path.split(output_file)[0]}/output_countries.csv'
         df_output.to_csv(output_file_path, index=False)
 
 
@@ -62,13 +63,13 @@ if __name__ == "__main__":
     
     extract = DataExtract()
 
-    # for file in os.listdir(folder_path):
-    #     if os.path.splitext(file)[1] == ".csv":
-    #         file_name = os.path.join(folder_path, file)
-    #         product_data = extract.find_product(file_name)
-    #         extract.save_csv(product_data)
+    for file in os.listdir(folder_path):
+        if os.path.splitext(file)[1] == ".csv":
+            file_name = os.path.join(folder_path, file)
+            product_data = extract.find_product(file_name)
+            extract.save_csv(product_data, folder_path)
 
-    # print("Extracting finished.")
+    print("Extracting finished.")
 
-    extract.transform_countries("output.csv", f"{folder_path}/country_codes_V202401b.csv")
+    extract.transform_countries(f"{folder_path}/output.csv", f"{folder_path}/country_codes_V202401b.csv")
 
