@@ -76,8 +76,10 @@ if __name__ == "__main__":
                         denominator = world_single_exp/country_all_exp
                         country_single_exp = rca.single_exp(file_name, country, val, prod)
                         country_all_exp = rca.all_exp(file_name, country, val)
-
-                        row.append((country_single_exp/country_all_exp)/denominator)
+                        if denominator == 0:
+                            print(f"Denominator is 0. {val} {prod}")
+                        else:
+                            row.append((country_single_exp/country_all_exp)/denominator)
                 
                 df_row = pd.DataFrame([row])
                 pd.concat([df, df_row], ignore_index=True)
