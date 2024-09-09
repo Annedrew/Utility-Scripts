@@ -7,7 +7,6 @@
 import pandas as pd
 import os
 
-
 class DataExtract:
     # Find product and save it to csv file
     def find_product(self, file_name):
