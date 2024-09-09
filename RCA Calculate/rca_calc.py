@@ -72,10 +72,10 @@ if __name__ == "__main__":
                     for prod in PROD:
                         file_name = os.path.join(FILE_PATH, file)
                         world_single_exp = rca.single_exp(file_name, "all", val, prod)
-                        country_all_exp = rca.all_exp(file_name, "all", val, prod)
+                        country_all_exp = rca.all_exp(file_name, "all", val)
                         denominator = world_single_exp/country_all_exp
                         country_single_exp = rca.single_exp(file_name, country, val, prod)
-                        country_all_exp = rca.all_exp(file_name, country, val, prod)
+                        country_all_exp = rca.all_exp(file_name, country, val)
 
                         row.append((country_single_exp/country_all_exp)/denominator)
                 
