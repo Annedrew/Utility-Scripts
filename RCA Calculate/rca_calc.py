@@ -66,6 +66,7 @@ if __name__ == "__main__":
 
     for file in os.listdir(FILE_PATH):
         if os.path.splitext(file)[1] == ".csv" and file != "product_codes_HS12_V202401b.csv":
+            file_name = os.path.join(FILE_PATH, file)
             world_single_exp = rca.single_exp(file_name, "all", val, prod)
             country_all_exp = rca.all_exp(file_name, "all", val, prod)
             denominator = world_single_exp/country_all_exp
@@ -74,7 +75,6 @@ if __name__ == "__main__":
                 row = []
                 for val in VAL:
                     for prod in PROD:
-                        file_name = os.path.join(FILE_PATH, file)
                         country_single_exp = rca.single_exp(file_name, country, val, prod)
                         country_all_exp = rca.all_exp(file_name, country, val, prod)
 
