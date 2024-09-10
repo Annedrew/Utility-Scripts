@@ -4,7 +4,7 @@ from constants import *
 
 
 class RCA:
-    def single_exp(self, file_path, country, val, prod):
+    def single_exp(self, file_path, val, prod, country):
         df = pd.read_csv(file_path)
         if country != "all":
             single_prod = df[(df['k'] == prod) & (df['i'] == country)]
@@ -24,7 +24,7 @@ class RCA:
         return res
     
 
-    def all_exp(self, file_path, country, val):
+    def all_exp(self, file_path, val, country):
         df = pd.read_csv(file_path)
 
         if country != "all":
@@ -58,33 +58,33 @@ class RCA:
     
 if __name__ == "__main__":
     rca = RCA()
-    
-    country_file = f"{FILE_PATH}/country_codes_V202401b.csv"
 
     # This is not smart
     df = pd.DataFrame(columns=["Year", "Country", "RCA-USD-121221", "RCA-TONNE-121221", "RCA-USD-121229", "RCA-TONNE-121229"])
 
-    for file in os.listdir(FILE_PATH):
-        if os.path.splitext(file)[1] == ".csv" and file != "product_codes_HS12_V202401b.csv":
-            for country in country_file:
-                row = []
-                for val in VAL:
+    row = []
+
+    for file in os.listdir(FOLDER_PATH):
+        file_name = os.path.join(FOLDER_PATH, file)
+        if os.path.splitext(file)[1] == ".csv" and file_name != PRODUCT_FILE:
+
+            for val in VAL:
+                world_all_exp = rca.all_exp(file_name, val, "all")  # year, val
+                if world_all_exp == 0:
+                    print(f"world_all_exp is 0 in file: {file}")
+                else:
+                    
                     for prod in PROD:
-                        file_name = os.path.join(FILE_PATH, file)
-                        world_single_exp = rca.single_exp(file_name, "all", val, prod)
-                        country_all_exp = rca.all_exp(file_name, "all", val)
-                        denominator = world_single_exp/country_all_exp
-                        country_single_exp = rca.single_exp(file_name, country, val, prod)
-                        country_all_exp = rca.all_exp(file_name, country, val)
-                        if denominator == 0:
-                            print(f"Denominator is 0. {val} {prod}")
-                        else:
-                            row.append((country_single_exp/country_all_exp)/denominator)
-                
-                df_row = pd.DataFrame([row])
-                pd.concat([df, df_row], ignore_index=True)
-                print(f"{country} {file} is added.")
+                        world_single_exp = rca.single_exp(file_name, val, prod, "all")  # year, val, prod
+                        if world_single_exp == 0:
+                            print(f"world_single_exp is 0 in file: {file}")
+
+                        for country in COUNTRY_FILE:
+                            country_all_exp = rca.all_exp(file_name, val, country)  # year, val, country
+                            if country_all_exp == 0:
+                                print(f"country_all_exp is 0 in file: {file}")
+                            country_single_exp = rca.single_exp(file_name, val, prod, country)  # year, val, prod, country
+                            if country_single_exp == 0:
+                                print(f"country_single_exp is 0 in file: {file}")
 
         print(f"{file} is operated.")
-    
-    df.to_csv("RCA.csv", index=False)
