@@ -53,56 +53,65 @@ class RCA:
 if __name__ == "__main__":
     rca = RCA()
 
-    # This is not smart
-    rca_df = pd.DataFrame(columns=["Year", "Country", "RCA-USD-121221", "RCA-TONNE-121221", "RCA-USD-121229", "RCA-TONNE-121229"])
     zero_df = pd.DataFrame(columns=['File', 'Country Code', 'Country Name', 'Product'])
-
-    row = []
 
     countries = pd.read_csv(COUNTRY_FILE)['country_code']
 
 
+    # Calculate country_single_exp
+    country_single_df = pd.DataFrame(columns=['Year', 'Country', 'Product', 'Val'])
     for file in os.listdir(FOLDER_PATH):
         file_name = os.path.join(FOLDER_PATH, file)
         if os.path.splitext(file)[1] == ".csv" and file_name != PRODUCT_FILE:
+            for val in VAL:
+                for prod in PROD:
+                    for country in countries:
+                        country_single_exp = rca.single_exp(file_name, val, prod, country)  # year, val, prod, country
+                        year = file.split("_")[2][1:]
+                        country_single_df = pd.concat([country_single_df, pd.Series([year, country, prod, country_single_exp])])
 
+    country_single_df.to_csv("Country_Single_Product_Export.csv", index=False)
+
+
+    # Calculate country_all_exp:
+    country_all_df = pd.DataFrame(columns=['Year', 'Country', 'Val'])
+    for file in os.listdir(FOLDER_PATH):
+        file_name = os.path.join(FOLDER_PATH, file)
+        if os.path.splitext(file)[1] == ".csv" and file_name != PRODUCT_FILE:
+            for val in VAL:
+                for country in countries:
+                    country_all_exp = rca.all_exp(file_name, val, country)  # year, val, country
+                    year = file.split("_")[2][1:]
+                    country_all_df = pd.concat([country_all_df, pd.Series([year, country, country_all_exp])])
+
+    country_all_df.to_csv("Country_All_Product_Export.csv", index=False)
+
+
+    # Calculate world_single_exp:
+    world_singe_df = pd.DataFrame(columns=['Year', 'Product', 'Val'])
+    for file in os.listdir(FOLDER_PATH):
+        file_name = os.path.join(FOLDER_PATH, file)
+        if os.path.splitext(file)[1] == ".csv" and file_name != PRODUCT_FILE:
+            for val in VAL:
+                for prod in PROD:
+                    world_single_exp = rca.single_exp(file_name, val, prod, "all")  # year, val, prod
+                    year = file.split("_")[2][1:]
+                    world_singe_df = pd.concat([world_singe_df, pd.Series([year, prod, world_single_exp])])
+
+    world_singe_df.to_csv("World_Single_Product_Export.csv", index=False)
+
+
+    # Calculate world_all_exp:
+    world_all_df = pd.DataFrame(columns=['Year', 'Val'])
+    for file in os.listdir(FOLDER_PATH):
+        file_name = os.path.join(FOLDER_PATH, file)
+        if os.path.splitext(file)[1] == ".csv" and file_name != PRODUCT_FILE:
             for val in VAL:
                 world_all_exp = rca.all_exp(file_name, val, "all")  # year, val
-                if world_all_exp == 0:
-                    rca_res = float('nan')
-                    print(f"world_all_exp is 0 in file: {file}")
-                else:
+                year = file.split("_")[2][1:]
+                world_all_df = pd.concat([world_all_df, pd.Series([year, world_all_exp])])
 
-                    for prod in PROD:
-                        world_single_exp = rca.single_exp(file_name, val, prod, "all")  # year, val, prod
-                        if world_single_exp == 0:
-                            rca_res = float('nan')
-                            print(f"world_single_exp is 0 in file: {file}")
-                        else:
-                            for country in countries:
-                                country_all_exp = rca.all_exp(file_name, val, country)  # year, val, country
-                                if country_all_exp == 0:
-                                    rca_res = float('nan')
-                                    print(f"country_all_exp {country} is 0 in file: {file}")
-                                else:
-                                    country_single_exp = rca.single_exp(file_name, val, prod, country)  # year, val, prod, country
-                                    if country_single_exp == 0:
-                                        rca_res = 0
-                                        print(f"country_single_exp {country} is 0 in file: {file}")
-                                        zero_df['File'] = f"{file}"
-                                        zero_df['Country Code'] = f"{country}"
-                                        zero_df['Country Name'] = rca.find_country_name(country, COUNTRY_FILE)
-                                        zero_df['Product'] = f"{prod}"
-                                    else:
-                                        # TODO: Final rca calculation phase, when the row has 'nan' or '0' value, fill it with 'nan' or '0' for now.
-                                        if rca_res == float('nan') or rca_res == 0:  
-                                            row = pd.Series([rca_res for i in range(len(rca_df.columns))])
-                                            pd.concat([rca_df, row], ignore_index=True)
-                                        else:
-                                            rca_res = (country_single_exp / country_all_exp) / (world_single_exp / world_all_exp)
-                                            pd.concat([rca_df, row], ignore_index=True)
+    world_all_df.to_csv("World_All_Product_Export.csv", index=False)
 
 
-        zero_df.to_csv("zero_export_info.csv", index=False)
-
-        print(f"{file} is operated.")
+    print(f"{file} is operated.")
