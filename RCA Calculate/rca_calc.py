@@ -97,6 +97,7 @@ if __name__ == "__main__":
 
 
     # Calculate world_single_exp:
+    rows = []
     world_singe_df = pd.DataFrame(columns=['Year', 'Product', 'Val'])
     for file in os.listdir(FOLDER_PATH):
         file_name = os.path.join(FOLDER_PATH, file)
@@ -116,6 +117,7 @@ if __name__ == "__main__":
 
 
     # Calculate world_all_exp:
+    rows = []
     world_all_df = pd.DataFrame(columns=['Year', 'Val'])
     for file in os.listdir(FOLDER_PATH):
         file_name = os.path.join(FOLDER_PATH, file)
