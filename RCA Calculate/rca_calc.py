@@ -67,6 +67,7 @@ if __name__ == "__main__":
                 for prod in PROD:
                     for country in countries:
                         country_single_exp = rca.single_exp(file_name, val, prod, country)  # year, val, prod, country
+                        print(f"country_single_exp: {country_single_exp} ")
                         year = file.split("_")[2][1:]
                         country_single_df = pd.concat([country_single_df, pd.Series([year, country, prod, country_single_exp])])
         print(f"{file} is operated.")
@@ -83,6 +84,7 @@ if __name__ == "__main__":
             for val in VAL:
                 for country in countries:
                     country_all_exp = rca.all_exp(file_name, val, country)  # year, val, country
+                    print(f"country_all_exp: {country_all_exp} ")
                     year = file.split("_")[2][1:]
                     country_all_df = pd.concat([country_all_df, pd.Series([year, country, country_all_exp])])
         print(f"{file} is operated.")
@@ -99,6 +101,7 @@ if __name__ == "__main__":
             for val in VAL:
                 for prod in PROD:
                     world_single_exp = rca.single_exp(file_name, val, prod, "all")  # year, val, prod
+                    print(f"world_single_exp: {world_single_exp} ")
                     year = file.split("_")[2][1:]
                     world_singe_df = pd.concat([world_singe_df, pd.Series([year, prod, world_single_exp])])
         print(f"{file} is operated.")
@@ -114,6 +117,7 @@ if __name__ == "__main__":
         if os.path.splitext(file)[1] == ".csv" and file_name != PRODUCT_FILE:
             for val in VAL:
                 world_all_exp = rca.all_exp(file_name, val, "all")  # year, val
+                print(f"world_all_exp: {world_all_exp} ")
                 year = file.split("_")[2][1:]
                 world_all_df = pd.concat([world_all_df, pd.Series([year, world_all_exp])])
         print(f"{file} is operated.")
