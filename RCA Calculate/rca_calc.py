@@ -64,6 +64,8 @@ if __name__ == "__main__":
 
     row = []
 
+    countries = pd.read_csv(COUNTRY_FILE)['country_code']
+
     for file in os.listdir(FOLDER_PATH):
         file_name = os.path.join(FOLDER_PATH, file)
         if os.path.splitext(file)[1] == ".csv" and file_name != PRODUCT_FILE:
@@ -79,7 +81,7 @@ if __name__ == "__main__":
                         if world_single_exp == 0:
                             print(f"world_single_exp is 0 in file: {file}")
 
-                        for country in COUNTRY_FILE:
+                        for country in countries:
                             country_all_exp = rca.all_exp(file_name, val, country)  # year, val, country
                             if country_all_exp == 0:
                                 print(f"country_all_exp {country} is 0 in file: {file}")
