@@ -69,8 +69,10 @@ if __name__ == "__main__":
                         country_single_exp = rca.single_exp(file_name, val, prod, country)  # year, val, prod, country
                         year = file.split("_")[2][1:]
                         country_single_df = pd.concat([country_single_df, pd.Series([year, country, prod, country_single_exp])])
+        print(f"{file} is operated.")
 
     country_single_df.to_csv("Country_Single_Product_Export.csv", index=False)
+    print(f"Country_Single_Product_Export.csv is done.")
 
 
     # Calculate country_all_exp:
@@ -83,8 +85,10 @@ if __name__ == "__main__":
                     country_all_exp = rca.all_exp(file_name, val, country)  # year, val, country
                     year = file.split("_")[2][1:]
                     country_all_df = pd.concat([country_all_df, pd.Series([year, country, country_all_exp])])
+        print(f"{file} is operated.")
 
     country_all_df.to_csv("Country_All_Product_Export.csv", index=False)
+    print(f"Country_All_Product_Export.csv is done.")
 
 
     # Calculate world_single_exp:
@@ -97,8 +101,10 @@ if __name__ == "__main__":
                     world_single_exp = rca.single_exp(file_name, val, prod, "all")  # year, val, prod
                     year = file.split("_")[2][1:]
                     world_singe_df = pd.concat([world_singe_df, pd.Series([year, prod, world_single_exp])])
+        print(f"{file} is operated.")
 
     world_singe_df.to_csv("World_Single_Product_Export.csv", index=False)
+    print(f"World_Single_Product_Export.csv is done.")
 
 
     # Calculate world_all_exp:
@@ -110,8 +116,7 @@ if __name__ == "__main__":
                 world_all_exp = rca.all_exp(file_name, val, "all")  # year, val
                 year = file.split("_")[2][1:]
                 world_all_df = pd.concat([world_all_df, pd.Series([year, world_all_exp])])
+        print(f"{file} is operated.")
 
     world_all_df.to_csv("World_All_Product_Export.csv", index=False)
-
-
-    print(f"{file} is operated.")
+    print(f"World_All_Product_Export.csv is done.")
