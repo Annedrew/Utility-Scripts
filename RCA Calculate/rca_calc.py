@@ -96,7 +96,7 @@ if __name__ == "__main__":
                                     else:
                                         # TODO: Final rca calculation phase, when the row has 'nan' or '0' value, fill it with 'nan' or '0' for now.
                                         if rca_res == float('nan') or rca_res == 0:  
-                                            row = [rca_res for i in range(len(rca_df.columns))]
+                                            row = pd.Series([rca_res for i in range(len(rca_df.columns))])
                                             pd.concat([rca_df, row], ignore_index=True)
                                         else:
                                             rca_res = (country_single_exp / country_all_exp) / (world_single_exp / world_all_exp)
