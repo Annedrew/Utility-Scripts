@@ -43,28 +43,24 @@ class RCA:
         return res
 
 
-    def transform_countries(self, output_file, country_file):
-        df_output = pd.read_csv(output_file)
+    def find_country_name(self, country_code, country_file):
         df_country = pd.read_csv(country_file)
+        country_name = df_country[df_country['country_code'] == country_code]['country_name']
 
-        mapping_dict = pd.Series(df_country.country_name.values, index=df_country.country_code).to_dict()
-        
-        df_output['i'] = df_output['i'].map(mapping_dict)
-        df_output['j'] = df_output['j'].map(mapping_dict)
+        return country_name
 
-        output_file_path = f'{os.path.split(output_file)[0]}/output_countries.csv'
-        df_output.to_csv(output_file_path, index=False)
-    
     
 if __name__ == "__main__":
     rca = RCA()
 
     # This is not smart
-    df = pd.DataFrame(columns=["Year", "Country", "RCA-USD-121221", "RCA-TONNE-121221", "RCA-USD-121229", "RCA-TONNE-121229"])
+    rca_df = pd.DataFrame(columns=["Year", "Country", "RCA-USD-121221", "RCA-TONNE-121221", "RCA-USD-121229", "RCA-TONNE-121229"])
+    zero_df = pd.DataFrame(columns=['File', 'Country Code', 'Country Name', 'Product'])
 
     row = []
 
     countries = pd.read_csv(COUNTRY_FILE)['country_code']
+
 
     for file in os.listdir(FOLDER_PATH):
         file_name = os.path.join(FOLDER_PATH, file)
@@ -73,20 +69,40 @@ if __name__ == "__main__":
             for val in VAL:
                 world_all_exp = rca.all_exp(file_name, val, "all")  # year, val
                 if world_all_exp == 0:
+                    rca_res = float('nan')
                     print(f"world_all_exp is 0 in file: {file}")
                 else:
 
                     for prod in PROD:
                         world_single_exp = rca.single_exp(file_name, val, prod, "all")  # year, val, prod
                         if world_single_exp == 0:
+                            rca_res = float('nan')
                             print(f"world_single_exp is 0 in file: {file}")
+                        else:
+                            for country in countries:
+                                country_all_exp = rca.all_exp(file_name, val, country)  # year, val, country
+                                if country_all_exp == 0:
+                                    rca_res = float('nan')
+                                    print(f"country_all_exp {country} is 0 in file: {file}")
+                                else:
+                                    country_single_exp = rca.single_exp(file_name, val, prod, country)  # year, val, prod, country
+                                    if country_single_exp == 0:
+                                        rca_res = 0
+                                        print(f"country_single_exp {country} is 0 in file: {file}")
+                                        zero_df['File'] = f"{file}"
+                                        zero_df['Country Code'] = f"{country}"
+                                        zero_df['Country Name'] = rca.find_country_name(country, COUNTRY_FILE)
+                                        zero_df['Product'] = f"{prod}"
+                                    else:
+                                        # TODO: Final rca calculation phase, when the row has 'nan' or '0' value, fill it with 'nan' or '0' for now.
+                                        if rca_res == float('nan') or rca_res == 0:  
+                                            row = [rca_res for i in range(len(rca_df.columns))]
+                                            pd.concat([rca_df, row], ignore_index=True)
+                                        else:
+                                            rca_res = (country_single_exp / country_all_exp) / (world_single_exp / world_all_exp)
+                                            pd.concat([rca_df, row], ignore_index=True)
 
-                        for country in countries:
-                            country_all_exp = rca.all_exp(file_name, val, country)  # year, val, country
-                            if country_all_exp == 0:
-                                print(f"country_all_exp {country} is 0 in file: {file}")
-                            country_single_exp = rca.single_exp(file_name, val, prod, country)  # year, val, prod, country
-                            if country_single_exp == 0:
-                                print(f"country_single_exp {country} is 0 in file: {file}")
+
+        zero_df.to_csv("zero_export_info.csv", index=False)
 
         print(f"{file} is operated.")
