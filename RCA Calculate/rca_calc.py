@@ -73,7 +73,7 @@ if __name__ == "__main__":
                 if world_all_exp == 0:
                     print(f"world_all_exp is 0 in file: {file}")
                 else:
-                    
+
                     for prod in PROD:
                         world_single_exp = rca.single_exp(file_name, val, prod, "all")  # year, val, prod
                         if world_single_exp == 0:
@@ -82,9 +82,9 @@ if __name__ == "__main__":
                         for country in COUNTRY_FILE:
                             country_all_exp = rca.all_exp(file_name, val, country)  # year, val, country
                             if country_all_exp == 0:
-                                print(f"country_all_exp is 0 in file: {file}")
+                                print(f"country_all_exp {country} is 0 in file: {file}")
                             country_single_exp = rca.single_exp(file_name, val, prod, country)  # year, val, prod, country
                             if country_single_exp == 0:
-                                print(f"country_single_exp is 0 in file: {file}")
+                                print(f"country_single_exp {country} is 0 in file: {file}")
 
         print(f"{file} is operated.")
