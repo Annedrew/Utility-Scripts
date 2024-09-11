@@ -42,7 +42,7 @@ class RCA:
 if __name__ == "__main__":
     rca = RCA()
 
-    country_single_rows = []
+    # country_single_rows = []
     country_all_rows = []
     world_single_rows = []
     world_all_rows = []
@@ -55,10 +55,10 @@ if __name__ == "__main__":
             year = file.split("_")[2][1:]
 
             for val in VAL:
-                for prod in PROD:
-                    for country in countries:
-                        country_single_exp = rca.single_exp(df, val, prod, country)  # year, val, prod, country
-                        country_single_rows.append([year, country, prod, country_single_exp])
+                # for prod in PROD:
+                #     for country in countries:
+                #         country_single_exp = rca.single_exp(df, val, prod, country)  # year, val, prod, country
+                #         country_single_rows.append([year, country, prod, country_single_exp])
 
                 for country in countries:
                     country_all_exp = rca.all_exp(df, val, country)  # year, val, country
@@ -71,12 +71,12 @@ if __name__ == "__main__":
                 world_all_exp = rca.all_exp(df, val, "all")  # year, val
                 world_all_rows.append([year, world_all_exp])
 
-    country_single_df = pd.DataFrame(country_single_rows, columns=['Year', 'Country', 'Product', 'Val'])
+    # country_single_df = pd.DataFrame(country_single_rows, columns=['Year', 'Country', 'Product', 'Val'])
     country_all_df = pd.DataFrame(country_all_rows, columns=['Year', 'Country', 'Val'])
     world_single_df = pd.DataFrame(world_single_rows, columns=['Year', 'Product', 'Val'])
     world_all_df = pd.DataFrame(world_all_rows, columns=['Year', 'Val'])
 
-    country_single_df.to_csv("Country_Single_Product_Export.csv", index=False)
+    # country_single_df.to_csv("Country_Single_Product_Export.csv", index=False)
     country_all_df.to_csv("Country_All_Product_Export.csv", index=False)
     world_single_df.to_csv("World_Single_Product_Export.csv", index=False)
     world_all_df.to_csv("World_All_Product_Export.csv", index=False)
