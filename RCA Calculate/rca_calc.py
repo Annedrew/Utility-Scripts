@@ -61,10 +61,12 @@ if __name__ == "__main__":
                 #         country_single_rows.append([year, country, prod, country_single_exp])
 
                 for country in countries:
+                    print(f"Calculating counrty exp, I am in {file}, {val}, {country}.")
                     country_all_exp = rca.all_exp(df, val, country)  # year, val, country
                     country_all_rows.append([year, country, country_all_exp])
 
                 for prod in PROD:
+                    print(f"Calculating world exp, I am in {file}, {val}, {prod}")
                     world_single_exp = rca.single_exp(df, val, prod, "all")  # year, val, prod
                     world_single_rows.append([year, prod, world_single_exp])
 
