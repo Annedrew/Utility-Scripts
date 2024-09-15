@@ -32,9 +32,9 @@ class RCA:
         else:
             single_prod = df[df['k'] == prod].copy()
 
-        if val == "v":
+        if val == "V":
             column = 'v'
-        elif val == "q":
+        elif val == "Q":
             column = 'q'
 
         single_prod.loc[:, column] = pd.to_numeric(single_prod[column], errors='coerce').fillna(0)
@@ -49,9 +49,9 @@ class RCA:
         else:
             all_prod = df
 
-        if val == "v":
+        if val == "V":
             column = 'v'
-        elif val == "q":
+        elif val == "Q":
             column = 'q'
 
         all_prod.loc[:, column] = pd.to_numeric(all_prod[column], errors='coerce').fillna(0)
