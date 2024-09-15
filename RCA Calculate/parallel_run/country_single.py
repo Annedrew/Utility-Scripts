@@ -57,7 +57,7 @@ class RCA:
         all_prod.loc[:, column] = pd.to_numeric(all_prod[column], errors='coerce').fillna(0)
         res = all_prod[column].sum(skipna=True)
         
-        return res if pd.notnull(res) else 0
+        return float(res) if pd.notnull(res) else 0
 
 
     def find_country_name(self, country_code, country_file):

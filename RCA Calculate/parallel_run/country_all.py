@@ -57,7 +57,7 @@ class RCA:
         all_prod.loc[:, column] = pd.to_numeric(all_prod[column], errors='coerce').fillna(0)
         res = all_prod[column].sum(skipna=True)
         
-        return res if pd.notnull(res) else 0
+        return float(res) if pd.notnull(res) else 0
 
 
     def find_country_name(self, country_code, country_file):
@@ -83,7 +83,7 @@ if __name__ == "__main__":
             except Exception as exc:
                 print(f"{file} generated an exception: {exc}")
 
-    country_all_rows = pd.DataFrame(all_rows, columns=['Year', 'Country', 'V', 'P'])
+    country_all_rows = pd.DataFrame(all_rows, columns=['Year', 'Country', 'V', 'Q'])
     country_all_rows.to_csv("Country_All_Product_Export.csv", index=False)
 
     end_time = time.time()

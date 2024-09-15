@@ -10,18 +10,15 @@ def process_file(file):
     print(f"Processing {file} in thread: {threading.get_ident()}")
     rca = RCA()
     world_all_rows = []
-
-    for file in os.listdir(FOLDER_PATH):
-        file_name = os.path.join(FOLDER_PATH, file)
-        if os.path.splitext(file)[0].split("_")[0] == "BACI":
-            df = pd.read_csv(file_name)
-            year = file.split("_")[2][1:]
-            row = [year]
-            for val in VAL:
-                world_all_exp = rca.all_exp(df, val,"all")  # year, val
-                row.append(world_all_exp)
-            world_all_rows.append(row)
-            print(f"{file} is done.")
+    file_name = os.path.join(FOLDER_PATH, file)
+    df = pd.read_csv(file_name)
+    year = file.split("_")[2][1:]
+    row = [year]
+    for val in VAL:
+        world_all_exp = rca.all_exp(df, val,"all")  # year, val
+        row.append(world_all_exp)
+    world_all_rows.append(row)
+    print(f"{file} is done.")
     
     return world_all_rows
 
@@ -58,7 +55,7 @@ class RCA:
         all_prod.loc[:, column] = pd.to_numeric(all_prod[column], errors='coerce').fillna(0)
         res = all_prod[column].sum(skipna=True)
         
-        return res if pd.notnull(res) else 0
+        return float(res) if pd.notnull(res) else 0
 
 
     def find_country_name(self, country_code, country_file):
@@ -86,7 +83,7 @@ if __name__ == "__main__":
                 print(f"{file} generated an exception: {exc}")
 
     
-    world_all_rows = pd.DataFrame(all_rows, columns=['Year', 'V', 'P'])
+    world_all_rows = pd.DataFrame(all_rows, columns=['Year', 'V', 'Q'])
     world_all_rows.to_csv("World_All_Product_Export.csv", index=False)
 
     end_time = time.time()
