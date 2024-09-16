@@ -9,21 +9,19 @@ import time
 def process_file(file):
     print(f"Processing {file} in thread: {threading.get_ident()}")
     rca = RCA()
-    country_single_rows = []
+    world_all_rows = []
     file_name = os.path.join(FOLDER_PATH, file)
     df = pd.read_csv(file_name)
     year = file.split("_")[2][1:]
-    countries = pd.read_csv(file_name)['i'].unique()
-    for country in countries:
-        row = [year, country]
-        for val in VAL:
-            for prod in PROD:
-                country_single_exp = rca.single_exp(df, val, prod, country)  # year, val, prod, country
-                row.append(country_single_exp)
-        country_single_rows.append(row)
+    row = [year]
+    for val in VAL:
+        world_all_exp = rca.all_exp(df, val,"all")  # year, val
+        row.append(world_all_exp)
+    world_all_rows.append(row)
     print(f"{file} is done.")
+    
+    return world_all_rows
 
-    return country_single_rows
 
 class RCA:
     def single_exp(self, df, val, prod, country):
@@ -32,9 +30,9 @@ class RCA:
         else:
             single_prod = df[df['k'] == prod].copy()
 
-        if val == "v":
+        if val == "V":
             column = 'v'
-        elif val == "q":
+        elif val == "Q":
             column = 'q'
 
         single_prod.loc[:, column] = pd.to_numeric(single_prod[column], errors='coerce').fillna(0)
@@ -49,9 +47,9 @@ class RCA:
         else:
             all_prod = df
 
-        if val == "v":
+        if val == "V":
             column = 'v'
-        elif val == "q":
+        elif val == "Q":
             column = 'q'
 
         all_prod.loc[:, column] = pd.to_numeric(all_prod[column], errors='coerce').fillna(0)
@@ -69,6 +67,7 @@ class RCA:
     
 if __name__ == "__main__":
     start_time = time.time()
+
     all_rows = []
 
     max_workers = os.cpu_count() * 2 if os.cpu_count() else 4 
@@ -83,9 +82,10 @@ if __name__ == "__main__":
             except Exception as exc:
                 print(f"{file} generated an exception: {exc}")
 
-    country_single_rows = pd.DataFrame(all_rows, columns=['Year', 'Country', 'V_121221', 'V_121229', 'Q_121221', 'Q_121229'])
-    country_single_rows.to_csv("Country_Single_Product_Export.csv", index=False)
+    
+    world_all_rows = pd.DataFrame(all_rows, columns=['Year', 'V', 'Q'])
+    world_all_rows.to_csv("World_All_Product_Export.csv", index=False)
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f"Total execution time for country_single_exp: {elapsed_time}")
+    print(f"Total execution time for world_all_exp: {elapsed_time}")
