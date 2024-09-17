@@ -1,7 +1,7 @@
 """
 xij: Export value from commodity i from a country to country j.
 
-output:
+output: (this should be the base of final output file)
     columns: year, exporter, importer, product, value, quantity
 
 parallel: 
@@ -45,4 +45,4 @@ if __name__ == "__main__":
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f"Total execution time for country_all_exp: {elapsed_time}")
+    print(f"Total execution time for xij: {elapsed_time}")

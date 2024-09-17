@@ -61,4 +61,4 @@ if __name__ == "__main__":
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f"Total execution time for country_all_exp: {elapsed_time}")
+    print(f"Total execution time for xin: {elapsed_time}")

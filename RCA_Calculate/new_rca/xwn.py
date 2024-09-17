@@ -30,9 +30,10 @@ def process_file(file):
     for importer in importers:
         row = [year, importer]
         for val in VAL:
-            world_all_exp = rca.all_exp(df, val, "all")  # year, val
+            world_all_exp = rca.all_imp(df, val, importer, "all")
             row.append(world_all_exp)
         world_all_rows.append(row)
+
     print(f"{file} is done.")
     
     return world_all_rows
@@ -61,4 +62,4 @@ if __name__ == "__main__":
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f"Total execution time for world_all_exp: {elapsed_time}")
+    print(f"Total execution time for xwn: {elapsed_time}")

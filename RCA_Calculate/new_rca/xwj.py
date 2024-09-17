@@ -27,8 +27,8 @@ def process_file(file):
     year = file.split("_")[2][1:]
 
     country_all_rows = []
-    for importer in COUNTRY_CODE:
-        for exporter in COUNTRY_CODE:
+    for exporter in COUNTRY_CODE:
+        for importer in COUNTRY_CODE:
             row = [year, importer, exporter]
             for val in VAL:
                 xwj = selected_df[selected_df[importer] & selected_df[exporter]][val].sum()
@@ -62,4 +62,4 @@ if __name__ == "__main__":
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f"Total execution time for world_all_exp: {elapsed_time}")
+    print(f"Total execution time for xwj: {elapsed_time}")
