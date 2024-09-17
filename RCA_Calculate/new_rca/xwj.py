@@ -29,11 +29,14 @@ def process_file(file):
     country_all_rows = []
     for exporter in COUNTRY_CODE:
         for importer in COUNTRY_CODE:
-            row = [year, importer, exporter]
+            row = [year, exporter, importer]
             for val in VAL:
-                xwj = selected_df[selected_df[importer] & selected_df[exporter]][val].sum()
+                val = val.lower()
+                val_df = selected_df[(selected_df['j'] == importer) & (selected_df['i'] == exporter)][val].copy()
+                val_df = pd.to_numeric(val_df, errors='coerce').fillna(0)
+                xwj = val_df.sum(skipna=True)
                 row.append(xwj)
-            country_all_rows.apend(row)
+            country_all_rows.append(row)
 
     print(f"{file} is done.")
     

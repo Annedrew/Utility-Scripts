@@ -38,8 +38,12 @@ if __name__ == "__main__":
         futures = {executor.submit(process_file, file): file for file in os.listdir(FOLDER_PATH) if os.path.splitext(file)[0].split("_")[0] == "BACI"}
         
         for future in as_completed(futures):
-            df = future.result()
-            dfs.append(df)
+            file = futures[future]
+            try:
+                df = future.result()
+                dfs.append(df)
+            except Exception as exc:
+                print(f"{file} generated an exception: {exc}")
         final_df = pd.concat(dfs, ignore_index=True)
         final_df.to_csv("xij.csv", index=False)
 
