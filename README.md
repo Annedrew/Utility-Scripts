@@ -1,2 +1,2 @@
 ## About
-Data processing and calculation or other utilities.
+Data processing, calculation or other utilities.
