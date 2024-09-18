@@ -19,14 +19,13 @@ import time
 def process_file(file):
     print(f"Processing {file} in thread: {threading.get_ident()}")
 
-    rca = RCA()
-    world_all_rows = []
-
     file_name = os.path.join(FOLDER_PATH, file)
     df = pd.read_csv(file_name)
     year = file.split("_")[2][1:]
     importers = df['j'].unique()
 
+    rca = RCA()
+    world_all_rows = []
     for importer in importers:
         row = [year, importer]
         for val in VAL:

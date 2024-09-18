@@ -23,19 +23,16 @@ def process_file(file):
     file_name = os.path.join(FOLDER_PATH, file)
     df = pd.read_csv(file_name)
     selected_df = df[(df['i'].isin(COUNTRY_CODE)) & (df['j'].isin(COUNTRY_CODE))]
-
     year = file.split("_")[2][1:]
 
+    rca = RCA()
     country_all_rows = []
     for exporter in COUNTRY_CODE:
         for importer in COUNTRY_CODE:
             row = [year, exporter, importer]
             for val in VAL:
-                val = val.lower()
-                val_df = selected_df[(selected_df['j'] == importer) & (selected_df['i'] == exporter)][val].copy()
-                val_df = pd.to_numeric(val_df, errors='coerce').fillna(0)
-                xwj = val_df.sum(skipna=True)
-                row.append(xwj)
+                country_all_rows = rca.all_imp(selected_df, val, importer, exporter)
+                row.append(country_all_rows)
             country_all_rows.append(row)
 
     print(f"{file} is done.")

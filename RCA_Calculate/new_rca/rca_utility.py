@@ -21,8 +21,8 @@ class RCA:
         elif val == "Q":
             column = 'q'
 
-        single_prod.loc[:, column] = pd.to_numeric(single_prod[column], errors='coerce').fillna(0)
-        res = single_prod[column].sum(skipna=True)
+        single_prod_df = pd.to_numeric(single_prod[column], errors='coerce').fillna(0)
+        res = single_prod_df.sum(skipna=True)
 
         return float(res) if pd.notnull(res) else 0
     
@@ -38,8 +38,8 @@ class RCA:
         elif val == "Q":
             column = 'q'
 
-        all_prod.loc[:, column] = pd.to_numeric(all_prod[column], errors='coerce').fillna(0)
-        res = all_prod[column].sum(skipna=True)
+        all_prod_df = pd.to_numeric(all_prod[column], errors='coerce').fillna(0)
+        res = all_prod_df.sum(skipna=True)
         
         return float(res) if pd.notnull(res) else 0
 
@@ -55,8 +55,8 @@ class RCA:
         elif val == "Q":
             column = 'q'
 
-        single_prod.loc[:, column] = pd.to_numeric(single_prod[column], errors='coerce').fillna(0)
-        res = single_prod[column].sum(skipna=True)
+        single_prod_df = pd.to_numeric(single_prod[column], errors='coerce').fillna(0)
+        res = single_prod_df.sum(skipna=True)
 
         return float(res) if pd.notnull(res) else 0
     
@@ -72,8 +72,8 @@ class RCA:
         elif val == "Q":
             column = 'q'
 
-        all_prod.loc[:, column] = pd.to_numeric(all_prod[column], errors='coerce').fillna(0)
-        res = all_prod[column].sum(skipna=True)
+        all_prod_df = pd.to_numeric(all_prod[column], errors='coerce').fillna(0)
+        res = all_prod_df.sum(skipna=True)
         
         return float(res) if pd.notnull(res) else 0
 

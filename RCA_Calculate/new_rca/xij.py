@@ -1,6 +1,8 @@
 """
 xij: Export value from commodity i from a country to country j.
 
+selected country: 'China', 'Norway', 'Denmark', 'India', 'Italy'
+
 output: (this should be the base of final output file)
     columns: year, exporter, importer, product, value, quantity
 
