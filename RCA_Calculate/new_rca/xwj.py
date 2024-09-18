@@ -31,8 +31,8 @@ def process_file(file):
         for importer in COUNTRY_CODE:
             row = [year, exporter, importer]
             for val in VAL:
-                country_all_rows = rca.all_imp(selected_df, val, importer, exporter)
-                row.append(country_all_rows)
+                country_single_imp = rca.all_imp(selected_df, val, importer, exporter)
+                row.append(country_single_imp)
             country_all_rows.append(row)
 
     print(f"{file} is done.")
