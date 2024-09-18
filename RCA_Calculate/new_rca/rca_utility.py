@@ -78,15 +78,36 @@ class RCA:
         return float(res) if pd.notnull(res) else 0
 
 
-    def rca_formular_old(self, c_s, c_a, w_s, w_a):
-        rca = (float(c_s) / float(c_a)) / (float(w_s) / float(w_a))
+    def rca_formular(self, xij, xin, xwj, xwn):
+        rca = (float(xij) / float(xin)) / (float(xwj) / float(xwn))
 
         # rca = round(rca, 3)
 
         return rca
 
 
-    def rca_calc(self, val, prod, country_single_file, country_all_file, world_single_file, world_all_file):
+    def rca_calc_new(self, val, xij, xin, xwj, xwn):
+        xij = pd.read_csv(xij, sep=",")
+        xin = pd.read_csv(xin, sep=",")
+        xwj = pd.read_csv(xwj, sep=",")
+        xwn = pd.read_csv(xwn, sep=",")
+
+        row_num = len(xij)
+        rca_scores = []
+        for i in range(row_num):
+            xij = xij.loc[i, val]
+            xin = xin[(xin['Year'] == xij.loc[i, 'Year']) & (xin['Importer'] == xij.loc[i, 'Importer']) & (xin[val]) & (xin['Product'] == xij.loc[i, 'Product'])]
+            xwj = xwj[(xwj['Year'] == xij.loc[i, 'Year']) & (xwj['Importer'] == xij.loc[i, 'Importer']) & (xwj[val]) & (xwj['Exporter'] == xij.loc[i, 'Exporter'])]
+            xwn = xwn[(xwn['Year'] == xij.loc[i, 'Year']) & (xwn['Importer'] == xij.loc[i, 'Importer']) & (xwn[val])]
+
+            rca_scores.append(self.rca_formular(xij, xin, xwj, xwn))
+        
+        df = pd.DataFrame(rca_scores)
+        
+        return df
+
+
+    def rca_calc_old(self, val, prod, country_single_file, country_all_file, world_single_file, world_all_file):
         c_single = pd.read_csv(country_single_file, sep=",")
         c_all = pd.read_csv(country_all_file, sep=",")
         w_single = pd.read_csv(world_single_file, sep=",")
@@ -97,9 +118,9 @@ class RCA:
         rca_scores = []
         for i in range(row_num):
             c_s = c_single.loc[i, col_name] # float
-            c_a = c_all[(c_all['Country'] == c_single.loc[i, 'Country']) & (c_all['Year'] == c_single.loc[i, 'Year'])]['V'].values[0] # find by country and year
+            c_a = c_all[(c_all['Country'] == c_single.loc[i, 'Country']) & (c_all['Year'] == c_single.loc[i, 'Year'])][val].values[0] # find by country and year
             w_s = w_single[w_single['Year'] == c_single.loc[i, 'Year']][col_name].values[0] # find by product and year
-            w_a = w_all[w_all['Year'] == c_single.loc[i, 'Year']]['V'].values[0] # filter by year
+            w_a = w_all[w_all['Year'] == c_single.loc[i, 'Year']][val].values[0] # filter by year
             
             rca_scores.append(self.rca_formular_old(c_s, c_a, w_s, w_a))
         
@@ -135,3 +156,6 @@ class RCA:
                 pair_country_list.append((imp, exp))
 
         return pair_country_list
+    
+    def change_column_name(self):
+        pass        

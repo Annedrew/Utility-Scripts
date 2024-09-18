@@ -47,6 +47,7 @@ if __name__ == "__main__":
             except Exception as exc:
                 print(f"{file} generated an exception: {exc}")
         final_df = pd.concat(dfs, ignore_index=True)
+        final_df = final_df.rename(columns={'t': 'Year', 'i': 'Exporter', 'j': 'Importer', 'k': 'Product', 'v': 'V', 'q': 'Q'})
         final_df.to_csv("xij.csv", index=False)
 
     end_time = time.time()

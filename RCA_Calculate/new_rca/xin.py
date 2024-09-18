@@ -26,12 +26,12 @@ def process_file(file):
     rca = RCA()
     country_all_rows = []
     for country in countries:
-        row = [year, country]
-        for val in VAL:
-            for prod in PROD:
+        for prod in PROD:
+            row = [year, country, prod]
+            for val in VAL:
                 country_all_imp = rca.single_imp(df, val, prod, country, "all")
                 row.append(country_all_imp)
-        country_all_rows.append(row)
+            country_all_rows.append(row)
 
     print(f"{file} is done.")
 
@@ -55,9 +55,8 @@ if __name__ == "__main__":
             except Exception as exc:
                 print(f"{file} generated an exception: {exc}")
 
-    country_all_rows = pd.DataFrame(all_rows, columns=['Year', 'Country', 'V_121221', 'V_121229', 'Q_121221', 'Q_121229'])
+    country_all_rows = pd.DataFrame(all_rows, columns=['Year', 'Importer', 'Product', 'V', 'Q'])
     country_all_rows.to_csv("xin.csv", index=False)
-
 
     end_time = time.time()
     elapsed_time = end_time - start_time
