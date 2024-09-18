@@ -87,22 +87,23 @@ class RCA:
 
 
     def rca_calc_new(self, val, xij, xin, xwj, xwn):
-        xij = pd.read_csv(xij, sep=",")
-        xin = pd.read_csv(xin, sep=",")
-        xwj = pd.read_csv(xwj, sep=",")
-        xwn = pd.read_csv(xwn, sep=",")
+        xij_df = pd.read_csv(xij, sep=",")
+        xin_df = pd.read_csv(xin, sep=",")
+        xwj_df = pd.read_csv(xwj, sep=",")
+        xwn_df = pd.read_csv(xwn, sep=",")
 
-        row_num = len(xij)
+        row_num = len(xij_df)
         rca_scores = []
         for i in range(row_num):
-            xij = xij.loc[i, val]
-            xin = xin[(xin['Year'] == xij.loc[i, 'Year']) & (xin['Importer'] == xij.loc[i, 'Importer']) & (xin[val]) & (xin['Product'] == xij.loc[i, 'Product'])]
-            xwj = xwj[(xwj['Year'] == xij.loc[i, 'Year']) & (xwj['Importer'] == xij.loc[i, 'Importer']) & (xwj[val]) & (xwj['Exporter'] == xij.loc[i, 'Exporter'])]
-            xwn = xwn[(xwn['Year'] == xij.loc[i, 'Year']) & (xwn['Importer'] == xij.loc[i, 'Importer']) & (xwn[val])]
+            xij = xij_df.loc[i, val]
+            xin = xin_df[(xin_df['Year'] == xij_df.loc[i, 'Year']) & (xin_df['Importer'] == xij_df.loc[i, 'Importer']) & (xin_df[val]) & (xin_df['Product'] == xij_df.loc[i, 'Product'])][val].values[0]
+            xwj = xwj_df[(xwj_df['Year'] == xij_df.loc[i, 'Year']) & (xwj_df['Importer'] == xij_df.loc[i, 'Importer']) & (xwj_df[val]) & (xwj_df['Exporter'] == xij_df.loc[i, 'Exporter'])][val].values[0]
+            xwn = xwn_df[(xwn_df['Year'] == xij_df.loc[i, 'Year']) & (xwn_df['Importer'] == xij_df.loc[i, 'Importer']) & (xwn_df[val])][val].values[0]
 
             rca_scores.append(self.rca_formular(xij, xin, xwj, xwn))
         
         df = pd.DataFrame(rca_scores)
+        df.columns = [val]
         
         return df
 
