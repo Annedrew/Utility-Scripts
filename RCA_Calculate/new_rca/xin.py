@@ -1,7 +1,5 @@
 """
-xin: Total export value of commodity i from all exporting countries to country j.
-
-output file columns: year, importer, product, value, quantity
+Aim to get xin.csv in parallel.
 
 parallel: year
 """
@@ -18,20 +16,8 @@ import time
 def process_file(file):
     print(f"Processing {file} in thread: {threading.get_ident()}")
 
-    file_name = os.path.join(FOLDER_PATH, file)
-    df = pd.read_csv(file_name)
-    countries = df["j"].unique() # importer
-    year = file.split("_")[2][1:]
-
     rca = RCA()
-    country_all_rows = []
-    for country in countries:
-        for prod in PROD:
-            row = [year, country, prod]
-            for val in VAL:
-                country_all_imp = rca.single_imp(df, val, prod, country, "all")
-                row.append(country_all_imp)
-            country_all_rows.append(row)
+    country_all_rows = rca.generate_xin(FOLDER_PATH, file, VAL, PROD)
 
     print(f"{file} is done.")
 

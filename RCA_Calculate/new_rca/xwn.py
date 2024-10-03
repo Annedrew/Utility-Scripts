@@ -1,12 +1,9 @@
 """
-xwj:  Total export value of all commodities from all exporting to country j
-
-selected country: 'China', 'Norway', 'Denmark', 'India', 'Italy'
-
-output file columns: year, importer, value, quantity
+Aim to get xwn.csv in parallel.
 
 parallel: year
 """
+
 import pandas as pd
 import os
 from constants import *
@@ -19,19 +16,8 @@ import time
 def process_file(file):
     print(f"Processing {file} in thread: {threading.get_ident()}")
 
-    file_name = os.path.join(FOLDER_PATH, file)
-    df = pd.read_csv(file_name)
-    year = file.split("_")[2][1:]
-    importers = df['j'].unique()
-
     rca = RCA()
-    world_all_rows = []
-    for importer in importers:
-        row = [year, importer]
-        for val in VAL:
-            world_all_exp = rca.all_imp(df, val, importer, "all")
-            row.append(world_all_exp)
-        world_all_rows.append(row)
+    world_all_rows = rca.generate_xwn(FOLDER_PATH, file, VAL)
 
     print(f"{file} is done.")
     

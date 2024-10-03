@@ -1,13 +1,7 @@
 """
-xij: Export value from commodity i from a country to country j.
+Aim to get xij.csv in parallel.
 
-selected country: 'China', 'Norway', 'Denmark', 'India', 'Italy'
-
-output: (this should be the base of final output file)
-    columns: year, exporter, importer, product, value, quantity
-
-parallel: 
-    year
+parallel: year
 """
 
 import pandas as pd
@@ -22,9 +16,8 @@ import time
 def process_file(file):
     print(f"Processing {file} in thread: {threading.get_ident()}")
 
-    file_name = os.path.join(FOLDER_PATH, file)
-    df = pd.read_csv(file_name)
-    selected_df = df[(df['i'].isin(COUNTRY_CODE)) & (df['j'].isin(COUNTRY_CODE)) & (df['k'].isin(PROD))]
+    rca = RCA()
+    selected_df = rca.xij(FOLDER_PATH, file, PROD, all_or_not=True)
 
     print(f"{file} is done.")
 

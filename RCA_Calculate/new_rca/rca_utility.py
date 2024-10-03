@@ -8,7 +8,6 @@
 import pandas as pd
 from constants import *
 
-
 class RCA:
     def single_exp(self, df, val, prod, country):
         """
@@ -88,6 +87,115 @@ class RCA:
         res = all_prod_df.sum(skipna=True)
         
         return float(res) if pd.notnull(res) else 0
+    
+
+    def generate_xij(self, folder_path, file, prods, all_or_not):
+        """
+        Generate xij.csv file for final calculation. 
+            'xij' means export value of commodity i from a country to country j.
+
+        xij.csv columns: 
+            year, exporter, importer, product, value, quantity
+        """
+        file_name = os.path.join(folder_path, file)
+        df = pd.read_csv(file_name)
+
+        if all_or_not == True:
+            selected_df = df[df['k'].isin(prods)]
+        else:
+            country_code = COUNTRY_CODE # selected importers
+            selected_df = df[(df['i'].isin(country_code)) & (df['j'].isin(country_code)) & (df['k'].isin(prods))]
+
+        return selected_df
+    
+
+    def generate_xin(self, folder_path, file, vals, prods):
+        """
+        Generate xin.csv file for final calculation. 
+            'xin' means total export value of commodity i from all exporting countries to country j.
+
+        xin.csv columns: 
+            year, importer, product, value, quantity
+        """
+        file_name = os.path.join(folder_path, file)
+        df = pd.read_csv(file_name)
+        importers = df["j"].unique()
+        year = file.split("_")[2][1:]
+
+        country_all_rows = []
+        for importer in importers:
+            for prod in prods:
+                row = [year, importer, prod]
+                for val in vals:
+                    country_all_imp = self.single_imp(df, val, prod, importer, "all")
+                    row.append(country_all_imp)
+                country_all_rows.append(row)
+        
+        return country_all_rows
+
+
+    def generate_xwj(self, folder_path, file, vals, all_or_not):
+        """
+        Generate xwj.csv file for final calculation. 
+            'xwj' means total export value of all commodities from a country to country j.
+
+        xwj.csv columns: 
+            year, exporter, importer, value, quantity
+        """
+        file_name = os.path.join(folder_path, file)
+        df = pd.read_csv(file_name)
+        year = file.split("_")[2][1:]
+        country_all_rows = []
+        
+        if all_or_not == True:
+            importer_code = df['j'].unique() # all importers
+            exporter_code = df['i'].unique() # all exporters
+            selected_df = df
+            
+            for exporter in exporter_code:
+                for importer in importer_code:
+                    row = [year, exporter, importer]
+                    for val in vals:
+                        country_single_imp = self.all_imp(selected_df, val, importer, exporter)
+                        row.append(country_single_imp)
+                    country_all_rows.append(row)
+        else:
+            country_code = COUNTRY_CODE # selected importers
+            selected_df = df[(df['i'].isin(country_code)) & (df['j'].isin(country_code))]
+
+            for exporter in country_code:
+                for importer in country_code:
+                    row = [year, exporter, importer]
+                    for val in vals:
+                        country_single_imp = self.all_imp(selected_df, val, importer, exporter)
+                        row.append(country_single_imp)
+                    country_all_rows.append(row)
+
+        return country_all_rows
+        
+
+    def generate_xwn(self, folder_path, file, vals):
+        """
+        Generate xwn.csv file for final calculation. 
+            'xwn' means total export value of all commodities from all exporting to country j.
+
+        xwn.csv columns: 
+            year, importer, value, quantity
+        """
+        file_name = os.path.join(folder_path, file)
+        df = pd.read_csv(file_name)
+        importers = df['j'].unique()
+        year = file.split("_")[2][1:]
+        
+        world_all_rows = []
+        for importer in importers:
+            row = [year, importer]
+            for val in vals:
+                world_all_exp = self.all_imp(df, val, importer, "all")
+                row.append(world_all_exp)
+            world_all_rows.append(row)
+
+        return world_all_rows
 
 
     def rca_formular(self, xij, xin, xwj, xwn):
