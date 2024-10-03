@@ -1,11 +1,14 @@
-# # estimate how many calculations need to be done.
+"""
+estimate how many calculations need to be done.
+"""
 # import pandas as pd
 # df = pd.read_csv("RCA Calculate/BACI_HS12_V202401b/country_codes_V202401b.csv")
 # print(len(df))  # 238
 # print(238 * 2 * 2 * 10)  # country * val * prod * year
 
-
-# # investigate is every file include all the countries in country file.  - No
+"""
+investigate is every file include all the countries in country file.  - No
+"""
 # import pandas as pd
 # country = "RCA Calculate/BACI_HS12_V202401b/country_codes_V202401b.csv"
 # data = "RCA Calculate/BACI_HS12_V202401b/BACI_HS12_Y2012_V202401b.csv"
@@ -20,7 +23,9 @@
 # print(len(not_include))
 
 
-# Check if the document has the same country for each file - No
+"""
+Check if the document has the same country for each file - No
+"""
 # previous_countries = None
 # countries = set(pd.read_csv(file_name)['i'].unique())
 # if previous_countries is None:
@@ -34,7 +39,9 @@
 # 1. parallel process - OK
 # 2. batch - Works, but need to sort before setup batches, same country might end up in different batch.
 
-# How many lines in a file?
+"""
+How many lines in a file?
+"""
 # [("BACI_HS12_Y2021_V202401b.csv", 11567369), ("BACI_HS12_Y2017_V202401b.csv", 11133430), 
 # ("BACI_HS12_Y2020_V202401b.csv", 11061172), ("BACI_HS12_Y2016_V202401b.csv", 10824942), 
 # ("BACI_HS12_Y2018_V202401b.csv", 11275332), ("BACI_HS12_Y2019_V202401b.csv", 11423408), 

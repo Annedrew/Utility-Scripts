@@ -11,6 +11,9 @@ from constants import *
 
 class RCA:
     def single_exp(self, df, val, prod, country):
+        """
+        Return the sum of a single production (prod) export to a single country or the world (country). The sum can be value or quantity (val).
+        """
         if country != "all":
             single_prod = df[(df['k'] == prod) & (df['i'] == country)].copy()
         else:
@@ -28,6 +31,9 @@ class RCA:
     
 
     def all_exp(self, df, val, country):
+        """
+        Return the sum of all production export to a single country or the world (country). The sum can be value or quantity (val).
+        """
         if country != "all":
             all_prod = df[df['i'] == country]
         else:
@@ -45,6 +51,9 @@ class RCA:
 
 
     def single_imp(self, df, val, prod, imp_country, exp_country):
+        """
+        Return the sum of a single production (prod) from importer (imp_country) to a single exporter or the world (exp_country). The sum can be value or quantity (val).
+        """
         if exp_country != "all":
             single_prod = df[(df['k'] == prod) & (df['j'] == imp_country) & (df['i'] == exp_country)].copy()
         else:
@@ -62,6 +71,9 @@ class RCA:
     
 
     def all_imp(self, df, val, imp_country, exp_country):
+        """
+        Return the sum of all production from importer (imp_country) to a single exporter or the world (exp_country). The sum can be value or quantity (val).
+        """
         if exp_country != "all":
             all_prod = df[(df['i'] == exp_country) & (df['j'] == imp_country)].copy()
         else:
@@ -79,6 +91,9 @@ class RCA:
 
 
     def rca_formular(self, xij, xin, xwj, xwn):
+        """
+        Math formular for RCA calculation.
+        """
         rca = (float(xij) / float(xin)) / (float(xwj) / float(xwn))
 
         # rca = round(rca, 3)
@@ -87,6 +102,9 @@ class RCA:
 
 
     def rca_calc_new(self, val, xij, xin, xwj, xwn):
+        """
+        Batch calculation of RCA with new RCA formular.
+        """
         xij_df = pd.read_csv(xij, sep=",")
         xin_df = pd.read_csv(xin, sep=",")
         xwj_df = pd.read_csv(xwj, sep=",")
@@ -109,6 +127,9 @@ class RCA:
 
 
     def rca_calc_old(self, val, prod, country_single_file, country_all_file, world_single_file, world_all_file):
+        """
+        Batch calculation of RCA with old RCA formular.
+        """
         c_single = pd.read_csv(country_single_file, sep=",")
         c_all = pd.read_csv(country_all_file, sep=",")
         w_single = pd.read_csv(world_single_file, sep=",")
@@ -131,32 +152,38 @@ class RCA:
 
 
     def find_country_name(self, country_code, country_file):
+        """
+        Parse a country code to a country name.
+        """
         df_country = pd.read_csv(country_file)
         country_name = df_country[df_country['country_code'] == country_code]['country_name'].iloc[0]
 
         return country_name
 
 
-    def transform_countries(self, output_file, country_file, country_column_name):
-        df_output = pd.read_csv(output_file)
+    def transform_countries(self, country_code_file, country_file, country_column_name):
+        """
+        Convert 'country code column' into 'country name column' of a file (country_code_file).
+        """
+        df_file = pd.read_csv(country_code_file)
         df_country = pd.read_csv(country_file)
 
         mapping_dict = pd.Series(df_country.country_name.values, index=df_country.country_code).to_dict()
         
-        df_output[country_column_name] = df_output[country_column_name].map(mapping_dict)
+        df_file[country_column_name] = df_file[country_column_name].map(mapping_dict)
 
-        # output_file_path = f'{os.path.split(output_file)[0]}/output_countries.csv'
-        df_output.to_csv("country.csv", index=False)
+        df_file.to_csv(f"{os.path.splitext(country_code_file)[0]}_(country name).csv", index=False)
 
 
-    def generate_country_pair(self):
+    def generate_country_pair(self, country_code):
+        """
+        Generate country pair. If country_code = [1,2], output will be [(1,1), (1,2), (2,1), (2,2)]
+        """
         pair_country_list = []
 
-        for imp in COUNTRY_CODE:
-            for exp in COUNTRY_CODE:
+        for imp in country_code:
+            for exp in country_code:
                 pair_country_list.append((imp, exp))
 
         return pair_country_list
     
-    def change_column_name(self):
-        pass        
