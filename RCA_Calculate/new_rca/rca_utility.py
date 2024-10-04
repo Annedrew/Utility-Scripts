@@ -202,7 +202,10 @@ class RCA:
         """
         Math formular for RCA calculation.
         """
-        rca = (float(xij) / float(xin)) / (float(xwj) / float(xwn))
+        if xin != 0 and xwj != 0 and xwn != 0:
+            rca = (float(xij) / float(xin)) / (float(xwj) / float(xwn))
+        else:
+            rca = None
 
         # rca = round(rca, 3)
 
@@ -252,7 +255,7 @@ class RCA:
             w_s = w_single[w_single['Year'] == c_single.loc[i, 'Year']][col_name].values[0] # find by product and year
             w_a = w_all[w_all['Year'] == c_single.loc[i, 'Year']][val].values[0] # filter by year
             
-            rca_scores.append(self.rca_formular_old(c_s, c_a, w_s, w_a))
+            rca_scores.append(self.rca_formular(c_s, c_a, w_s, w_a))
         
         df = pd.DataFrame(rca_scores, columns=[col_name])
         
