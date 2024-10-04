@@ -18,12 +18,7 @@ class RCA:
         else:
             single_prod = df[df['k'] == prod].copy()
 
-        if val == "V":
-            column = 'v'
-        elif val == "Q":
-            column = 'q'
-
-        single_prod_df = pd.to_numeric(single_prod[column], errors='coerce').fillna(0)
+        single_prod_df = pd.to_numeric(single_prod[val], errors='coerce').fillna(0)
         res = single_prod_df.sum(skipna=True)
 
         return float(res) if pd.notnull(res) else 0
@@ -38,12 +33,7 @@ class RCA:
         else:
             all_prod = df
 
-        if val == "V":
-            column = 'v'
-        elif val == "Q":
-            column = 'q'
-
-        all_prod_df = pd.to_numeric(all_prod[column], errors='coerce').fillna(0)
+        all_prod_df = pd.to_numeric(all_prod[val], errors='coerce').fillna(0)
         res = all_prod_df.sum(skipna=True)
         
         return float(res) if pd.notnull(res) else 0
@@ -58,12 +48,7 @@ class RCA:
         else:
             single_prod = df[(df['k'] == prod) & (df['j'] == imp_country)].copy()
 
-        if val == "V":
-            column = 'v'
-        elif val == "Q":
-            column = 'q'
-
-        single_prod_df = pd.to_numeric(single_prod[column], errors='coerce').fillna(0)
+        single_prod_df = pd.to_numeric(single_prod[val], errors='coerce').fillna(0)
         res = single_prod_df.sum(skipna=True)
 
         return float(res) if pd.notnull(res) else 0
@@ -78,12 +63,7 @@ class RCA:
         else:
             all_prod = df[df['j'] == imp_country].copy()
 
-        if val == "V":
-            column = 'v'
-        elif val == "Q":
-            column = 'q'
-
-        all_prod_df = pd.to_numeric(all_prod[column], errors='coerce').fillna(0)
+        all_prod_df = pd.to_numeric(all_prod[val], errors='coerce').fillna(0)
         res = all_prod_df.sum(skipna=True)
         
         return float(res) if pd.notnull(res) else 0
