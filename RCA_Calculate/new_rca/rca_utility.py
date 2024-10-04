@@ -182,7 +182,9 @@ class RCA:
         """
         Math formular for RCA calculation.
         """
-        if xin != 0 and xwj != 0 and xwn != 0:
+        if str(xij).strip()== "NA":
+            xij = 0
+        if xij !=0 and xin != 0 and xwj != 0 and xwn != 0:
             rca = (float(xij) / float(xin)) / (float(xwj) / float(xwn))
         else:
             rca = None
@@ -205,9 +207,9 @@ class RCA:
         rca_scores = []
         for i in range(row_num):
             xij = xij_df.loc[i, val]
-            xin = xin_df[(xin_df['Year'] == xij_df.loc[i, 'Year']) & (xin_df['Importer'] == xij_df.loc[i, 'Importer']) & (xin_df[val]) & (xin_df['Product'] == xij_df.loc[i, 'Product'])][val].values[0]
-            xwj = xwj_df[(xwj_df['Year'] == xij_df.loc[i, 'Year']) & (xwj_df['Importer'] == xij_df.loc[i, 'Importer']) & (xwj_df[val]) & (xwj_df['Exporter'] == xij_df.loc[i, 'Exporter'])][val].values[0]
-            xwn = xwn_df[(xwn_df['Year'] == xij_df.loc[i, 'Year']) & (xwn_df['Importer'] == xij_df.loc[i, 'Importer']) & (xwn_df[val])][val].values[0]
+            xin = xin_df[(xin_df['Year'] == xij_df.loc[i, 'Year']) & (xin_df['Importer'] == xij_df.loc[i, 'Importer']) & (xin_df['Product'] == xij_df.loc[i, 'Product'])][val].values[0]
+            xwj = xwj_df[(xwj_df['Year'] == xij_df.loc[i, 'Year']) & (xwj_df['Importer'] == xij_df.loc[i, 'Importer']) & (xwj_df['Exporter'] == xij_df.loc[i, 'Exporter'])][val].values[0]
+            xwn = xwn_df[(xwn_df['Year'] == xij_df.loc[i, 'Year']) & (xwn_df['Importer'] == xij_df.loc[i, 'Importer'])][val].values[0]
 
             rca_scores.append(self.rca_formular(xij, xin, xwj, xwn))
         
