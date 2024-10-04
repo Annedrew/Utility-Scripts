@@ -18,7 +18,7 @@ class RCA:
         else:
             single_prod = df[df['k'] == prod].copy()
 
-        single_prod_df = pd.to_numeric(single_prod[val], errors='coerce').fillna(0)
+        single_prod_df = pd.to_numeric(single_prod[val.lower()], errors='coerce').fillna(0)
         res = single_prod_df.sum(skipna=True)
 
         return float(res) if pd.notnull(res) else 0
@@ -33,7 +33,7 @@ class RCA:
         else:
             all_prod = df
 
-        all_prod_df = pd.to_numeric(all_prod[val], errors='coerce').fillna(0)
+        all_prod_df = pd.to_numeric(all_prod[val.lower()], errors='coerce').fillna(0)
         res = all_prod_df.sum(skipna=True)
         
         return float(res) if pd.notnull(res) else 0
@@ -48,7 +48,7 @@ class RCA:
         else:
             single_prod = df[(df['k'] == prod) & (df['j'] == imp_country)].copy()
 
-        single_prod_df = pd.to_numeric(single_prod[val], errors='coerce').fillna(0)
+        single_prod_df = pd.to_numeric(single_prod[val.lower()], errors='coerce').fillna(0)
         res = single_prod_df.sum(skipna=True)
 
         return float(res) if pd.notnull(res) else 0
@@ -63,7 +63,7 @@ class RCA:
         else:
             all_prod = df[df['j'] == imp_country].copy()
 
-        all_prod_df = pd.to_numeric(all_prod[val], errors='coerce').fillna(0)
+        all_prod_df = pd.to_numeric(all_prod[val.lower()], errors='coerce').fillna(0)
         res = all_prod_df.sum(skipna=True)
         
         return float(res) if pd.notnull(res) else 0
@@ -182,9 +182,9 @@ class RCA:
         """
         Math formular for RCA calculation.
         """
-        if str(xij).strip()== "NA":
+        if str(xij).strip() == "NA":
             xij = 0
-        if xij !=0 and xin != 0 and xwj != 0 and xwn != 0:
+        if xij != 0 and xin != 0 and xwj != 0 and xwn != 0:
             rca = (float(xij) / float(xin)) / (float(xwj) / float(xwn))
         else:
             rca = None
