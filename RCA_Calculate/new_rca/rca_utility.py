@@ -11,7 +11,7 @@ from constants import *
 class RCA:
     def single_exp(self, df, val, prod, country):
         """
-        Return the sum of a single production (prod) export to a single country or the world (country). The sum can be value or quantity (val).
+        Return the sum of a single commodity(<prod>)'s exportation in a country(<country>: single country or the world). The sum can be value or quantity (val).
         """
         if country != "all":
             single_prod = df[(df['k'] == prod) & (df['i'] == country)].copy()
@@ -26,7 +26,7 @@ class RCA:
 
     def all_exp(self, df, val, country):
         """
-        Return the sum of all production export to a single country or the world (country). The sum can be value or quantity (val).
+        Return the sum of all commodities' exportation in a country(<country>: single country or the world). The sum can be value or quantity (val).
         """
         if country != "all":
             all_prod = df[df['i'] == country]
@@ -41,7 +41,7 @@ class RCA:
 
     def single_imp(self, df, val, prod, imp_country, exp_country):
         """
-        Return the sum of a single production (prod) from importer (imp_country) to a single exporter or the world (exp_country). The sum can be value or quantity (val).
+        Return the sum of a single commodity(<prod>)'s importation from a exporter(<exp_country>: single exporter or the world) to a importer(<imp_country>: single importer). The sum can be value or quantity (val).
         """
         if exp_country != "all":
             single_prod = df[(df['k'] == prod) & (df['j'] == imp_country) & (df['i'] == exp_country)].copy()
@@ -56,7 +56,7 @@ class RCA:
 
     def all_imp(self, df, val, imp_country, exp_country):
         """
-        Return the sum of all production from importer (imp_country) to a single exporter or the world (exp_country). The sum can be value or quantity (val).
+        Return the sum of all commodities' importation from a exporter(<exp_country> single exporter or the world) to a importer(<imp_country>: single importer). The sum can be value or quantity (val).
         """
         if exp_country != "all":
             all_prod = df[(df['i'] == exp_country) & (df['j'] == imp_country)].copy()
@@ -178,9 +178,9 @@ class RCA:
         return world_all_rows
 
 
-    def rca_formular(self, xij, xin, xwj, xwn):
+    def rca_formula(self, xij, xin, xwj, xwn):
         """
-        Math formular for RCA calculation.
+        Math formula for RCA calculation.
         """
         if str(xij).strip() == "NA":
             xij = 0
@@ -196,7 +196,7 @@ class RCA:
 
     def rca_calc_new(self, val, xij, xin, xwj, xwn):
         """
-        Batch calculation of RCA with new RCA formular.
+        Batch calculation of RCA with new RCA formula.
         """
         xij_df = pd.read_csv(xij, sep=",")
         xin_df = pd.read_csv(xin, sep=",")
@@ -211,7 +211,7 @@ class RCA:
             xwj = xwj_df[(xwj_df['Year'] == xij_df.loc[i, 'Year']) & (xwj_df['Importer'] == xij_df.loc[i, 'Importer']) & (xwj_df['Exporter'] == xij_df.loc[i, 'Exporter'])][val].values[0]
             xwn = xwn_df[(xwn_df['Year'] == xij_df.loc[i, 'Year']) & (xwn_df['Importer'] == xij_df.loc[i, 'Importer'])][val].values[0]
 
-            rca_scores.append(self.rca_formular(xij, xin, xwj, xwn))
+            rca_scores.append(self.rca_formula(xij, xin, xwj, xwn))
         
         df = pd.DataFrame(rca_scores)
         df.columns = [val]
@@ -221,7 +221,7 @@ class RCA:
 
     def rca_calc_old(self, val, prod, country_single_file, country_all_file, world_single_file, world_all_file):
         """
-        Batch calculation of RCA with old RCA formular.
+        Batch calculation of RCA with old RCA formula.
         """
         c_single = pd.read_csv(country_single_file, sep=",")
         c_all = pd.read_csv(country_all_file, sep=",")
@@ -237,7 +237,7 @@ class RCA:
             w_s = w_single[w_single['Year'] == c_single.loc[i, 'Year']][col_name].values[0] # find by product and year
             w_a = w_all[w_all['Year'] == c_single.loc[i, 'Year']][val].values[0] # filter by year
             
-            rca_scores.append(self.rca_formular(c_s, c_a, w_s, w_a))
+            rca_scores.append(self.rca_formula(c_s, c_a, w_s, w_a))
         
         df = pd.DataFrame(rca_scores, columns=[col_name])
         
