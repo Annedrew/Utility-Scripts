@@ -9,7 +9,7 @@ import pandas as pd
 from constants import *
 
 class RCA:
-    def single_exp(self, df, val, prod, country):
+    def single_exp(self, df, val, prod, country) -> float:
         """
         Return the sum of a single commodity(<prod>)'s exportation in a country(<country>: single country or the world). The sum can be value or quantity (val).
         """
@@ -24,7 +24,7 @@ class RCA:
         return float(res) if pd.notnull(res) else 0
     
 
-    def all_exp(self, df, val, country):
+    def all_exp(self, df, val, country) -> float:
         """
         Return the sum of all commodities' exportation in a country(<country>: single country or the world). The sum can be value or quantity (val).
         """
@@ -39,7 +39,7 @@ class RCA:
         return float(res) if pd.notnull(res) else 0
 
 
-    def single_imp(self, df, val, prod, imp_country, exp_country):
+    def single_imp(self, df, val, prod, imp_country, exp_country) -> float:
         """
         Return the sum of a single commodity(<prod>)'s importation from a exporter(<exp_country>: single exporter or the world) to a importer(<imp_country>: single importer). The sum can be value or quantity (val).
         """
@@ -54,7 +54,7 @@ class RCA:
         return float(res) if pd.notnull(res) else 0
     
 
-    def all_imp(self, df, val, imp_country, exp_country):
+    def all_imp(self, df, val, imp_country, exp_country) -> float:
         """
         Return the sum of all commodities' importation from a exporter(<exp_country> single exporter or the world) to a importer(<imp_country>: single importer). The sum can be value or quantity (val).
         """
@@ -69,7 +69,7 @@ class RCA:
         return float(res) if pd.notnull(res) else 0
     
 
-    def generate_xij(self, folder_path, file, prods, all_or_not):
+    def generate_xij(self, folder_path, file, prods, all_or_not) -> pd.DataFrame:
         """
         Generate xij.csv file for final calculation. 
             'xij' means export value of commodity i from a country to country j.
@@ -89,7 +89,7 @@ class RCA:
         return selected_df
     
 
-    def generate_xin(self, folder_path, file, vals, prods):
+    def generate_xin(self, folder_path, file, vals, prods) -> list:
         """
         Generate xin.csv file for final calculation. 
             'xin' means total export value of commodity i from all exporting countries to country j.
@@ -114,7 +114,7 @@ class RCA:
         return country_all_rows
 
 
-    def generate_xwj(self, folder_path, file, vals, all_or_not):
+    def generate_xwj(self, folder_path, file, vals, all_or_not) -> list:
         """
         Generate xwj.csv file for final calculation. 
             'xwj' means total export value of all commodities from a country to country j.
@@ -154,7 +154,7 @@ class RCA:
         return country_all_rows
         
 
-    def generate_xwn(self, folder_path, file, vals):
+    def generate_xwn(self, folder_path, file, vals) -> list:
         """
         Generate xwn.csv file for final calculation. 
             'xwn' means total export value of all commodities from all exporting to country j.
@@ -178,7 +178,7 @@ class RCA:
         return world_all_rows
 
 
-    def rca_formula(self, xij, xin, xwj, xwn):
+    def rca_formula(self, xij, xin, xwj, xwn) -> float:
         """
         Math formula for RCA calculation.
         """
@@ -194,7 +194,7 @@ class RCA:
         return rca
 
 
-    def rca_calc_new(self, val, xij, xin, xwj, xwn):
+    def rca_calc_new(self, val, xij, xin, xwj, xwn) -> pd.DataFrame:
         """
         Batch calculation of RCA with new RCA formula.
         """
@@ -219,7 +219,7 @@ class RCA:
         return df
 
 
-    def rca_calc_old(self, val, prod, country_single_file, country_all_file, world_single_file, world_all_file):
+    def rca_calc_old(self, val, prod, country_single_file, country_all_file, world_single_file, world_all_file) -> pd.DataFrame:
         """
         Batch calculation of RCA with old RCA formula.
         """
@@ -244,7 +244,7 @@ class RCA:
         return df
 
 
-    def find_country_name(self, country_code, country_file):
+    def find_country_name(self, country_code, country_file) -> str:
         """
         Parse a country code to a country name.
         """
@@ -268,7 +268,7 @@ class RCA:
         df_file.to_csv(f"{os.path.splitext(country_code_file)[0]}_(country name).csv", index=False)
 
 
-    def generate_country_pair(self, country_code):
+    def generate_country_pair(self, country_code) -> list:
         """
         Generate country pair. If country_code = [1,2], output will be [(1,1), (1,2), (2,1), (2,2)]
         """
