@@ -6,7 +6,8 @@
  '''
 
 import pandas as pd
-from constants import *
+import os
+
 
 class RCA:
     def single_exp(self, df, val, prod, country) -> float:
@@ -69,7 +70,7 @@ class RCA:
         return float(res) if pd.notnull(res) else 0
     
 
-    def generate_xij(self, folder_path, file, prods, all_or_not) -> pd.DataFrame:
+    def generate_xij(self, folder_path, file, prods, country_code) -> pd.DataFrame:
         """
         Generate xij.csv file for final calculation. 
             'xij' means export value of commodity i from a country to country j.
@@ -80,10 +81,9 @@ class RCA:
         file_name = os.path.join(folder_path, file)
         df = pd.read_csv(file_name)
 
-        if all_or_not == True:
+        if country_code == "all":
             selected_df = df[df['k'].isin(prods)]
         else:
-            country_code = COUNTRY_CODE # selected importers
             selected_df = df[(df['i'].isin(country_code)) & (df['j'].isin(country_code)) & (df['k'].isin(prods))]
 
         return selected_df
@@ -114,7 +114,7 @@ class RCA:
         return country_all_rows
 
 
-    def generate_xwj(self, folder_path, file, vals, all_or_not) -> list:
+    def generate_xwj(self, folder_path, file, vals, country_code) -> list:
         """
         Generate xwj.csv file for final calculation. 
             'xwj' means total export value of all commodities from a country to country j.
@@ -127,7 +127,7 @@ class RCA:
         year = file.split("_")[2][1:]
         country_all_rows = []
         
-        if all_or_not == True:
+        if country_code == "all":
             importer_code = df['j'].unique() # all importers
             exporter_code = df['i'].unique() # all exporters
             selected_df = df
@@ -140,16 +140,18 @@ class RCA:
                         row.append(country_single_imp)
                     country_all_rows.append(row)
         else:
-            country_code = COUNTRY_CODE # selected importers
-            selected_df = df[(df['i'].isin(country_code)) & (df['j'].isin(country_code))]
+            if df["i"].isin(country_code).any() or df["j"].isin(country_code).any():
+                selected_df = df[(df['i'].isin(country_code)) & (df['j'].isin(country_code))]
 
-            for exporter in country_code:
-                for importer in country_code:
-                    row = [year, exporter, importer]
-                    for val in vals:
-                        country_single_imp = self.all_imp(selected_df, val, importer, exporter)
-                        row.append(country_single_imp)
-                    country_all_rows.append(row)
+                for exporter in country_code:
+                    for importer in country_code:
+                        row = [year, exporter, importer]
+                        for val in vals:
+                            country_single_imp = self.all_imp(selected_df, val, importer, exporter)
+                            row.append(country_single_imp)
+                        country_all_rows.append(row)
+            else:
+                print(f"{country_code} are not including in the {file}")
 
         return country_all_rows
         

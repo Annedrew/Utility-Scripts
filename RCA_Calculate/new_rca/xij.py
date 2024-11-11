@@ -17,7 +17,7 @@ def process_file(file):
     print(f"Processing {file} in thread: {threading.get_ident()}")
 
     rca = RCA()
-    selected_df = rca.generate_xij(FOLDER_PATH, file, PROD, all_or_not=True)
+    selected_df = rca.generate_xij(FOLDER_PATH, file, PROD, "all")
 
     print(f"{file} is done.")
 

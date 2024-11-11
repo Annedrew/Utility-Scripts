@@ -17,7 +17,7 @@ def process_file(file):
     print(f"Processing {file} in thread: {threading.get_ident()}")
 
     rca = RCA()
-    country_all_rows = rca.generate_xwj(FOLDER_PATH, file, VAL, all_or_not=True)
+    country_all_rows = rca.generate_xwj(FOLDER_PATH, file, VAL, "all")
 
     print(f"{file} is done.")
     
